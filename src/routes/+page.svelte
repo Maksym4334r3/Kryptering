@@ -27,13 +27,12 @@
 	}
 
 	function encryptTextValue() {
-		encryptError = '';
-		encryptedText = '';
-		generatedOtpKey = '';
-
-		if (!isValidText(encryptText)) {
-			encryptError = 'Skriv inn tekst med engelske bokstaver og mellomrom. Teksten må inneholde minst én bokstav.';
-			return;
+	encryptError = '';
+	encryptedText = '';
+	generatedOtpKey = '';
+	  if (!isValidText(encryptText)) {
+	encryptError = 'Skriv inn tekst med engelske bokstaver og mellomrom. Teksten må inneholde minst én bokstav.';
+	return;
 		}
 
 		if (method === 'caesar') {
@@ -48,15 +47,13 @@
 
 		if (method === 'vigenere') {
 			if (!/^[A-Za-z]+$/.test(encryptVigenereKey)) {
-				encryptError = 'Vigenère-nøkkelen må bare inneholde bokstaver fra A til Z.';
+				encryptError = 'Vigenere-nøkkelen må bare inneholde bokstaver fra A til Z.';
 				return;
-			}
-
-			encryptedText = transformText(encryptText, encryptVigenereKey.toUpperCase(), false);
+			} encryptedText = transformText(encryptText, encryptVigenereKey.toUpperCase(), false);
 			return;
 		}
 
-		// One-Time Pad bruker en ny, tilfeldig nøkkelbokstav for hver bokstav i teksten.
+		// OneTime Pad bruker en ny tilfeldig nøkkelbokstav for hver bokstav i teksten
 		generatedOtpKey = Array.from(encryptText)
 			.filter((character) => character !== ' ')
 			.map(() => String.fromCharCode(65 + Math.floor(Math.random() * 26)))
@@ -89,7 +86,7 @@
 
 		if (method === 'vigenere') {
 			if (!/^[A-Za-z]+$/.test(decryptVigenereKey)) {
-				decryptError = 'Vigenère-nøkkelen må bare inneholde bokstaver fra A til Z.';
+				decryptError = 'Vigenere-nøkkelen må bare inneholde bokstaver fra A til Z.';
 				return;
 			}
 
@@ -113,26 +110,18 @@
 
 	// Bokstaver og nøkkel behandles som tall fra 0 til 25; mellomrom bruker ingen nøkkelbokstav.
 	/** @param {string} text @param {string} key @param {boolean} decrypt */
-	function transformText(text, key, decrypt) {
-		let keyIndex = 0;
-
+	function transformText(text, key, decrypt) {let keyIndex = 0;
 		return Array.from(text)
 			.map((character) => {
 				if (character === ' ') return character;
-
-				const isLowerCase = character >= 'a' && character <= 'z';
-				const textValue = character.toUpperCase().charCodeAt(0) - 65;
-				const keyValue = key.charCodeAt(keyIndex % key.length) - 65;
-				const shiftedValue = (textValue + (decrypt ? -keyValue : keyValue) + 26) % 26;
-				keyIndex += 1;
-
-				const result = String.fromCharCode(65 + shiftedValue);
-				return isLowerCase ? result.toLowerCase() : result;
-			})
-			.join('');
-	}
+const isLowerCase = character >= 'a' && character <= 'z';
+const textValue = character.toUpperCase().charCodeAt(0) - 65;
+const keyValue = key.charCodeAt(keyIndex % key.length) - 65;
+	const shiftedValue = (textValue + (decrypt ? -keyValue : keyValue) + 26) % 26;
+		keyIndex += 1
+		const result = String.fromCharCode(65 + shiftedValue);
+				return isLowerCase ? result.toLowerCase() : result;}).join('');}
 </script>
-
 <svelte:head>
 	<title>Kryptografiverktøy</title>
 	<meta
@@ -143,71 +132,63 @@
 
 <main>
 	<header class="page-header">
-		<p class="eyebrow">Kryptografi · demonstrasjon</p>
-		<h1>Kryptografiverktøy</h1>
+		<h1>Kryptografiverktoyy</h1>
 		<p class="intro">
-			Krypter og dekrypter tekst med Caesar, Vigenère eller One-Time Pad.
+			Krypter og dekrypter tekst med Caesar Vigenere eller OneTime Pad.
 		</p>
 	</header>
 
 	<section class="method-picker" aria-labelledby="method-label">
 		<label id="method-label" for="method">Velg krypteringsmetode</label>
 		<select id="method" bind:value={method} onchange={clearResults}>
-			<option value="caesar">Caesar</option>
-			<option value="vigenere">Vigenère</option>
-			<option value="otp">One-Time Pad</option>
+	<option value="caesar">Caesar</option>
+	<option value="vigenere">Vigenere</option>
+	<option value="otp">One-Time Pad</option>
 		</select>
 	</section>
 
 	<div class="cards">
 		<section class="card" aria-labelledby="encrypt-heading">
 			<h2 id="encrypt-heading">Krypter</h2>
-			<label for="encrypt-text">Tekst</label>
-			<textarea
-				id="encrypt-text"
-				bind:value={encryptText}
-				placeholder="Skriv inn teksten du vil kryptere"
-				rows="4"
-			></textarea>
-
-			{#if method === 'caesar'}
-				<label for="encrypt-caesar-key">Nøkkel (0–25)</label>
-				<input
-					id="encrypt-caesar-key"
-					type="number"
-					min="0"
-					max="25"
-					step="1"
-					bind:value={encryptCaesarKey}
-					placeholder="For eksempel 3"
-				/>
+	   <label for="encrypt-text">Tekst</label>
+	<textarea
+		id="encrypt-text"
+	bind:value={encryptText}
+placeholder="Skriv inn teksten du vil kryptere"
+rows="4"></textarea>
+{#if method === 'caesar'}
+	<label for="encrypt-caesar-key">Nøkkel (0–25)</label>
+	 <input
+		id="encrypt-caesar-key"
+		type="number"
+		min="0"
+		max="25"
+		step="1"
+		bind:value={encryptCaesarKey}
+		placeholder="For eksempel 3"/>
 			{:else if method === 'vigenere'}
-				<label for="encrypt-vigenere-key">Vigenère-nøkkel</label>
+				<label for="encrypt-vigenere-key">Vigenere-nøkkel</label>
 				<input
-					id="encrypt-vigenere-key"
-					bind:value={encryptVigenereKey}
-					placeholder="Bare bokstaver A–Z"
-				/>
-			{:else}
-				<p class="hint">En tilfeldig nøkkel genereres automatisk når du krypterer.</p>
-			{/if}
-
-			<button type="button" onclick={encryptTextValue}>Krypter tekst</button>
-
-			{#if encryptError}
-				<p class="message error" role="alert">{encryptError}</p>
-			{/if}
-			{#if encryptedText}
-				<div class="result" aria-live="polite">
-					<h3>Ciphertext</h3>
-					<output>{encryptedText}</output>
-				</div>
-			{/if}
-			{#if generatedOtpKey}
-				<div class="result key-result" aria-live="polite">
-					<h3>One-Time Pad-nøkkel</h3>
-					<output>{generatedOtpKey}</output>
-					<p>Ta vare på nøkkelen. Den trengs for å dekryptere teksten.</p>
+id="encrypt-vigenere-key"
+	bind:value={encryptVigenereKey}
+	placeholder="Bare bokstaver A–Z"/>
+	{:else}
+	<p class="hint">En tilfeldig nøkkel genereres automatisk når du krypterer.</p>
+{/if}<button type="button" onclick={encryptTextValue}>Krypter tekst</button>
+{#if encryptError}
+	<p class="message error" role="alert">{encryptError}</p>
+{/if}
+{#if encryptedText}
+ <div class="result" aria-live="polite">
+	<h3>Ciphertext</h3>
+	<output>{encryptedText}</output>
+</div>
+{/if}
+  {#if generatedOtpKey}
+	<div class="result key-result" aria-live="polite">
+		<h3>One-Time Pad-nøkkel</h3>
+			<output>{generatedOtpKey}</output>
+	<p>Ta vare på nøkkelen. Den trengs for å dekryptere teksten.</p>
 				</div>
 			{/if}
 		</section>
@@ -234,7 +215,7 @@
 					placeholder="For eksempel 3"
 				/>
 			{:else if method === 'vigenere'}
-				<label for="decrypt-vigenere-key">Vigenère-nøkkel</label>
+				<label for="decrypt-vigenere-key">Vigenere-nøkkel</label>
 				<input
 					id="decrypt-vigenere-key"
 					bind:value={decryptVigenereKey}
@@ -263,10 +244,6 @@
 		</section>
 	</div>
 
-	<aside class="notice">
-		<strong>Merk:</strong> One-Time Pad-nøkkelen bruker <code>Math.random()</code> for
-		demonstrasjon. Den er ikke kryptografisk sikker og må aldri brukes til reell sikkerhet.
-	</aside>
 </main>
 
 <style>
@@ -276,30 +253,25 @@
 
 	:global(body) {
 		margin: 0;
-		background: #f3f5f9;
-		color: #1d2738;
-		font-family:
-			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-			sans-serif;
+		background: #fff;
+		color: #222;
+		font-family: system-ui, sans-serif;
 	}
 
 	main {
-		width: min(100% - 2rem, 1050px);
+		width: min(100% - 2rem, 900px);
 		margin: 0 auto;
-		padding: 3rem 0 4rem;
+		padding: 2rem 0 3rem;
 	}
 
 	.page-header {
-		margin-bottom: 2rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.eyebrow {
-		margin: 0 0 0.5rem;
-		color: #5266b5;
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
+		margin-bottom: 0.4rem;
+		color: #666;
+		font-size: 0.9rem;
 	}
 
 	h1,
@@ -310,162 +282,125 @@
 	}
 
 	h1 {
-		margin-bottom: 0.5rem;
-		font-size: clamp(2rem, 5vw, 3rem);
-		letter-spacing: -0.04em;
+		margin-bottom: 0.4rem;
+		font-size: 2rem;
 	}
 
 	.intro {
 		margin-bottom: 0;
-		color: #5c6678;
-		font-size: 1.05rem;
-	}
-
-	.method-picker,
-	.card,
-	.notice {
-		border: 1px solid #e0e5ef;
-		border-radius: 14px;
-		background: #fff;
-		box-shadow: 0 8px 25px rgb(25 38 70 / 5%);
+		color: #555;
 	}
 
 	.method-picker {
 		display: grid;
-		gap: 0.6rem;
-		max-width: 360px;
-		margin-bottom: 1.25rem;
-		padding: 1rem;
+		gap: 0.4rem;
+		max-width: 300px;
+		margin-bottom: 1.5rem;
 	}
 
 	.cards {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 1.25rem;
+		gap: 2rem;
 	}
 
 	.card {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.65rem;
-		padding: 1.35rem;
+		gap: 0.6rem;
 	}
 
 	h2 {
-		margin-bottom: 0.35rem;
-		font-size: 1.35rem;
-	}
-
-	label {
-		font-size: 0.9rem;
-		font-weight: 650;
+		margin-bottom: 0.2rem;
+		font-size: 1.25rem;
 	}
 
 	input,
 	select,
 	textarea {
 		width: 100%;
-		border: 1px solid #cbd3e1;
-		border-radius: 8px;
-		background: #fff;
+		border: 1px solid #bbb;
+		border-radius: 4px;
 		color: inherit;
 		font: inherit;
-		padding: 0.72rem 0.8rem;
+		padding: 0.65rem;
 	}
 
 	textarea {
 		resize: vertical;
 	}
 
-	input:focus,
-	select:focus,
-	textarea:focus {
-		border-color: #5266b5;
-		outline: 3px solid rgb(82 102 181 / 17%);
+	:focus-visible {
+		outline: 2px solid #333;
+		outline-offset: 2px;
 	}
 
 	button {
-		margin-top: 0.35rem;
-		border: 0;
-		border-radius: 8px;
-		background: #4358a8;
+		margin-top: 0.25rem;
+		border: 1px solid #222;
+		border-radius: 4px;
+		background: #e32020;
 		color: #fff;
 		cursor: pointer;
 		font: inherit;
-		font-weight: 700;
-		padding: 0.8rem 1rem;
+		padding: 0.65rem 0.9rem;
 	}
 
 	button:hover {
-		background: #35488f;
-	}
-
-	button:focus-visible {
-		outline: 3px solid #9ba9e3;
-		outline-offset: 2px;
+		background: #444;
 	}
 
 	.hint,
 	.result p {
 		margin: 0;
-		color: #5c6678;
-		font-size: 0.9rem;
+		color: #555;
+		font-size: 0.88rem;
 	}
 
 	.result {
 		display: grid;
-		gap: 0.45rem;
-		margin-top: 0.45rem;
-		padding: 0.9rem;
-		border-radius: 8px;
-		background: #f3f5fa;
+		gap: 0.4rem;
+		margin-top: 0.5rem;
+		padding: 0.75rem;
+		border-left: 3px solid #bbb;
+		background: #f7f7f7;
 	}
 
 	.result h3 {
 		margin: 0;
-		font-size: 0.9rem;
+		font-size: 0.95rem;
 	}
 
 	output {
 		overflow-wrap: anywhere;
-		font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-	}
-
-	.key-result {
-		border: 1px solid #c6d0f2;
-		background: #edf0fc;
 	}
 
 	.key-result output {
-		font-size: 1.15rem;
-		font-weight: 800;
-		letter-spacing: 0.08em;
+		font-weight: 700;
 	}
 
 	.message {
-		margin: 0.25rem 0 0;
-		font-size: 0.9rem;
+		margin: 0.2rem 0 0;
+		font-size: 0.88rem;
 	}
 
 	.error {
-		color: #b42318;
+		color: #b00020;
 	}
 
 	.notice {
-		margin-top: 1.25rem;
-		padding: 1rem 1.2rem;
-		color: #5c4a1d;
-		font-size: 0.92rem;
+		margin-top: 1.75rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid #ddd;
+		color: #555;
+		font-size: 0.88rem;
 	}
 
 	@media (max-width: 700px) {
-		main {
-			padding-top: 2rem;
-		}
-
 		.cards {
 			grid-template-columns: 1fr;
+			gap: 2rem;
 		}
 	}
 </style>
